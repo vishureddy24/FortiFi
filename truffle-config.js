@@ -12,7 +12,7 @@ module.exports = {
     development: {
       host: "127.0.0.1",
       port: 7545,
-      network_id: 1337, // Match 1337 network id
+      network_id: "*", // Match any network id
       gasPrice: 25000000000
     },
     sepolia: {
@@ -32,7 +32,7 @@ module.exports = {
     solc: {
       version: "^0.8.6",
       settings: {
-        evmVersion: 'byzantium',
+        evmVersion: 'london',
         optimizer: {
           enabled: true,
           runs: 1
@@ -43,5 +43,8 @@ module.exports = {
       }
     }
   },
-  plugins: ["truffle-contract-size"]
+  plugins: ["truffle-contract-size", "truffle-plugin-verify"],
+  api_keys: {
+    etherscan: process.env.ETHERSCAN_API_KEY
+  }
 }

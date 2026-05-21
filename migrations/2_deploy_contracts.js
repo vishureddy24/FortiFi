@@ -1,6 +1,7 @@
 const LARToken= artifacts.require('LARToken')
 const ADEToken= artifacts.require('ADE')
 const LendingAndBorrowing = artifacts.require('LendingAndBorrowing')
+const RiskController = artifacts.require('RiskController')
 const tools = require ("../scripts/helpful_scripts")
 
 const KEPT_BALANCE = web3.utils.toWei("1000", "ether")
@@ -17,7 +18,11 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(LARToken)
     await deployer.deploy(ADEToken)
     const lar_token = await LARToken.deployed()
-    await deployer.deploy(LendingAndBorrowing,lar_token.address)
+
+    await deployer.deploy(RiskController)
+    const risk_controller = await RiskController.deployed()
+
+    await deployer.deploy(LendingAndBorrowing, lar_token.address, risk_controller.address)
     const lending_and_borrowing = await LendingAndBorrowing.deployed()
 
     dai_token_address = await tools.get_contract("dai_token_address",network, deployer)
@@ -43,9 +48,10 @@ module.exports = async function(deployer, network, accounts) {
 
     await addTokensToBorrow(lending_and_borrowing, dai_token_address, weth_token_address, link_token_address, fau_token_address)
 
-    // Distribute 1000 DAI to all local accounts for testing
+    // Distribute 1000 DAI to all local accounts for testing and seed pool with 10000 DAI
     if (network === "development") {
         const mockDai = await artifacts.require("MockDAIToken").at(dai_token_address);
+        await mockDai.faucet(lending_and_borrowing.address, web3.utils.toWei("10000", "ether"));
         for (const account of accounts) {
             await mockDai.faucet(account, web3.utils.toWei("1000", "ether"));
         }

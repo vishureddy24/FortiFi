@@ -1,0 +1,66 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FortiFi Security SaaS API",
+    "description": "Institutional-grade Web3 risk intelligence and threat monitoring API.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5001/api/v1/saas",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/risk-score/{address}": {
+      "get": {
+        "summary": "Get wallet risk score",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Risk score details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "address": { "type": "string" },
+                    "riskScore": { "type": "number" },
+                    "tier": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/protocol-health": {
+      "get": {
+        "summary": "Get global protocol health status",
+        "responses": {
+          "200": {
+            "description": "Current health index and alert status"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      }
+    }
+  },
+  "security": [{ "ApiKeyAuth": [] }]
+}

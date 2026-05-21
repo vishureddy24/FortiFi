@@ -6,8 +6,6 @@ const { time } = require('@openzeppelin/test-helpers');
 
 contract("LendingAndBorrowing", async (accounts) => {
 
-
-
   describe("Tokens in Lending & Borrowing Array", async() => {
     const owner = accounts[0];
     const account = accounts[1];
@@ -60,18 +58,28 @@ contract("LendingAndBorrowing", async (accounts) => {
      let prev_lar_token_balance = await larToken.balanceOf(account)
 
      //-------- Tests for Lending functionality ----------
+      const req1 = web3.utils.sha3("req1");
+      const req2 = web3.utils.sha3("req2");
+      const req3 = web3.utils.sha3("req3");
+      const req4 = web3.utils.sha3("req4");
+      const req5 = web3.utils.sha3("req5");
+      const req6 = web3.utils.sha3("req6");
+      const req7 = web3.utils.sha3("req7");
+      const req8 = web3.utils.sha3("req8");
+      const req9 = web3.utils.sha3("req9");
+
       await larToken.approve(lending_and_borrowing.address, BigInt(amount), {"from": account})
-      await lending_and_borrowing.lend(larToken.address, BigInt(amount), {"from": account})
+      await lending_and_borrowing.lend(larToken.address, BigInt(amount), req1, {"from": account})
       var balance = await larToken.balanceOf(account)
       await larToken.approve(lending_and_borrowing.address, BigInt(balance), {"from": account})
 
       await adeToken.approve(lending_and_borrowing.address, BigInt(amount), {"from": account})
-      await lending_and_borrowing.lend(adeToken.address, BigInt(amount), {"from": account})
+      await lending_and_borrowing.lend(adeToken.address, BigInt(amount), req2, {"from": account})
       var balance = await adeToken.balanceOf(account)
       await adeToken.approve(lending_and_borrowing.address, BigInt(balance), {"from": account})
 
       await adeToken.approve(lending_and_borrowing.address, BigInt(amount), {"from": another_lender})
-      await lending_and_borrowing.lend(adeToken.address, BigInt(amount), {"from": another_lender})
+      await lending_and_borrowing.lend(adeToken.address, BigInt(amount), req3, {"from": another_lender})
       var balance = await adeToken.balanceOf(another_lender)
       await adeToken.approve(lending_and_borrowing.address, BigInt(balance), {"from": another_lender})
 
@@ -101,10 +109,10 @@ contract("LendingAndBorrowing", async (accounts) => {
       // assert.equal(BigInt(new_lar_token_balance), BigInt(prev_lar_token_balance) - BigInt(amount) , "Inequal")
 
       // -------Tests for Borrowing functionality-------
-      await lending_and_borrowing.borrow(web3.utils.toWei("2"), adeToken.address, {"from": account})
-      await lending_and_borrowing.borrow(web3.utils.toWei("12"), larToken.address, {"from": account})
+      await lending_and_borrowing.borrow(web3.utils.toWei("2"), adeToken.address, req4, {"from": account})
+      await lending_and_borrowing.borrow(web3.utils.toWei("12"), larToken.address, req5, {"from": account})
 
-      await lending_and_borrowing.borrow(web3.utils.toWei("2"), adeToken.address, {"from": another_lender})
+      await lending_and_borrowing.borrow(web3.utils.toWei("2"), adeToken.address, req6, {"from": another_lender})
 
       /*
       Account Borrow:
@@ -136,7 +144,7 @@ contract("LendingAndBorrowing", async (accounts) => {
       console.log("balance left before",BigInt(lar_token_balance))
 
       /* -------Pay Debt functionality------- ===== [paid debt of larTokens i.e 2 Qty borrowed]; Now Left [12-2 = 10 Qty] */
-      await lending_and_borrowing.payDebt(larToken.address, web3.utils.toWei("2"), {"from": account})
+      await lending_and_borrowing.payDebt(larToken.address, web3.utils.toWei("2"), req7, {"from": account})
 
       var tokenAmountBorrowed = await lending_and_borrowing.tokensBorrowedAmount(larToken.address, account)
       assert.equal(BigInt(tokenAmountBorrowed), web3.utils.toWei("10"), "check")
@@ -152,29 +160,20 @@ contract("LendingAndBorrowing", async (accounts) => {
       //--------- Withdraw functionality --------
 
       // Paying outstanding debt of LarToken 10 Qty [i.e 20$]
-      await lending_and_borrowing.payDebt(larToken.address, web3.utils.toWei("10"), {"from": account})
+      await lending_and_borrowing.payDebt(larToken.address, web3.utils.toWei("10"), req8, {"from": account})
       var lar_token_balance = await larToken.balanceOf(account)
       console.log("balance left after paying larToken debt",BigInt(lar_token_balance))
 
 
-      await lending_and_borrowing.withdraw(larToken.address, amount , {"from": account})
+      await lending_and_borrowing.withdraw(larToken.address, amount , req9, {"from": account})
 
       // Making sure that the token is transferred back to your account and lar rewarded token is removed from your account.
       var lar_rewarded_token = await lending_and_borrowing.getAmountInDollars(amount , larToken.address)
       var lar_token_balance_after = BigInt(lar_token_balance) + BigInt(amount) - BigInt(lar_rewarded_token)
       assert.equal(lar_token_balance_after, BigInt(lar_token_balance) - BigInt(amount))
 
-
-
-
-
-
-
-
     });
 
-
   });
-
 
 })

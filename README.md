@@ -1,56 +1,52 @@
-# DeFi-Lending-and-Borrowing DApp
-DeFi Lending platform which lets you lend, borrow crypto assets and helps you earn some passive income as interest on your deposits.
+# FortiFi: Autonomous DeFi Security & Lending Protocol
 
-A full stack, fully-onchain DeFi app that enables users to supply tokens to the contract and are rewarded with some customly made ERC20 token (LAR) based on the amount of token they supply and also allows users to borrow tokens from it.
+FortiFi is an enterprise-grade, security-first decentralized lending ecosystem. It combines a traditional lending MVP with an autonomous threat detection engine and adaptive smart contracts to protect users from modern DeFi exploits.
 
-It is deployed on the Ethereum Kovan Network.
+## 🏗️ Production Architecture
 
-# Features
-1. The contract supports 4 test tokens; DAI, LINK, WETH and FAU 😎
-2. Users can either supply some tokens to the pool just to provide liquidity or user can supply to the pool for usage as collateral.
-3. Users get rewarded with some LAR token when they supply to the pool. The LAR token rewarded to the user is calculated based on the token amount in dollars users supplied to the pool.
-4. For any user to borrow from the pool, the user has to stake some token as collateral. The collateral is influenced greatly by the LTV (Loan To Value) ratio of that particular token to stake. Note that the collateral must actually be greater in value than the token you want to borrow from the pool.
-5. The contract supports only stable APY rate for all tokens that can be borrowed. In other words, the amount of interest to pay at the end of the day is always constant.
-6. When user is ready to pay the debt, the interest along with the token borrowed is taken from the user. Interest is calculated based on that stable APY rate. 
-7. After repaying, user can withdraw the token staked as collateral from the pool.
-8. When a user withdraws from the pool, the contract also collects some LAR tokens rewarded to the user. The LAR token that will be collected from the user is equivalent in value to the amount of token user wants to withdraw.
+The platform is organized into a modular full-stack architecture designed for scalability and production readiness:
 
-# Technologies
-1. **Open Zeppelin**: The contract uses IERC20 of OpenZeppelin create an instance of a token and also, it uses the Ownable contract of the OpenZepppelin to ensure security of the contract
-2. **Chainlink**: The contract uses the AggregatorV3Interface of chainlink to fetch real time price feeds.
-3. **Truffle**: Truffle is a development environment, asset pipeline, and testing framework for developing smart contracts.
-4. **Ganache**: Ganache is used as blockchain for local testing. 
-5. **Next JS**: Next JS is the front end framework used to ensure flexible user interaction.
-6. **Tailwind CSS**
-7. **Metamask**
-8. **web3.js**
+- **`/frontend`**: A Next.js dashboard featuring real-time security alerts, risk scoring, and a premium "glassmorphism" UI.
+- **`/backend`**: A Node.js server orchestrating event listeners and providing REST APIs for the dashboard.
+- **`/contracts`**: Solidity smart contracts integrated with **OpenZeppelin** security primitives (`Pausable`, `ReentrancyGuard`).
+- **`/analytics`**: The "brain" of the platform. Contains detection modules for Flash Loans, Oracle manipulation, and velocity spikes.
+- **`/database`**: Centralized MongoDB models and connection logic.
+- **`/abis`**: Compiled smart contract artifacts for frontend and backend consumption.
 
+## 🛡️ Autonomous Security Features
 
-# Programming Languages
-1. Solidity
-2. Truffle
-3. Javascript
-4. Next.js
+1.  **Real-Time Threat Detection**: Monitors every block for suspicious patterns (Flash Loans, Price Drifts).
+2.  **Adaptive Risk Scoring**: Dynamically calculates user and protocol-wide risk scores (0-10) based on on-chain behavior.
+3.  **On-Chain Enforcement**: The security engine pushes high-risk scores on-chain, automatically restricting a user's borrowing power or pausing the protocol during an active exploit.
+4.  **Attack Simulation Framework**: Built-in tools to stress-test the protocol against synthetic threats.
 
-# What to Install
-1. Tailwind CSS: Install tailwind css [here](https://tailwindcss.com/docs/installation)
+## 🚀 Getting Started
 
-# How to use
-1. To deploy solidity smart contract on Kovan Network
+### Prerequisites
+- Node.js v16+
+- Truffle / Ganache
+- MongoDB (Local or Atlas)
+
+### Installation
+```bash
+npm install
 ```
-truffle deploy --network kovan
 
-```
-2. Start the Server
-```
+### Development
+To start both the frontend and backend in development mode:
+```bash
 npm run dev
 ```
- # Developer
- Let's Connect! 👋 👋 
- ```
- Paras Gaur - 
-    Email - parasgr484@gmail.com
-    Linkedin - https://www.linkedin.com/in/paras-gaur/
-    Website - https://paras-portfolio-flame.vercel.app/
- ```
 
+### Smart Contract Deployment
+```bash
+truffle migrate --network development
+```
+
+## 📜 Deployment Targets
+- **Local**: Ganache (Network ID 1337)
+- **Testnet**: Ethereum Sepolia
+- **Production**: Optimized for Layer 2s (Arbitrum/Optimism) for low-latency security synchronization.
+
+---
+*Created for Final Year Project / Startup MVP / Portfolio Demonstration.*
